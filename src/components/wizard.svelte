@@ -1,17 +1,21 @@
 <script>
  import Button from './button.svelte';
- export let show;
  export let steps = [];
+ export let product = null;
+ export let logo = null;
+ export let description;
+ export let link;
+ let finish;
  let currentStep = 0;
 
- function clickClose() {
-  show = false;
+ function clickHomepage() {
+  window.open(link, '_blank');
  }
 
- function keyClose() {
+ function keyHomepage() {
   if (event.key === 'Enter' || event.key === ' ') {
    event.preventDefault();
-   clickClose();
+   click();
   }
  }
 
@@ -23,54 +27,60 @@
   if (currentStep > 0) currentStep -= 1;
  }
 
- function finish() {
-  clickClose();
+ function finished() {
+  finish = true;
  }
 </script>
 
 <style>
  .wizard {
-  z-index: 100;
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  align-items: center;
+  gap: 10px;
   max-width: calc(100% - 20px);
   max-height: calc(100% - 20px);
-  transform: translate(-50%, -50%);
-  border: 1px solid #000;
+  padding: 10px;
+  margin: 10px;
+  overflow: auto;
+  border: 1px solid #555;
   border-radius: 10px;
-  overflow: hidden;
   background-color: #fff;
   box-shadow: var(--shadow);
  }
 
- .wizard .header {
+ .logo {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px;
   cursor: pointer;
+ }
+
+ .logo img {
+  display: block;
+  width: 50px;
+  height: 50px;
+ }
+
+ .logo .title {
+  font-size: 30px;
   font-weight: bold;
-  background-color: #fd3;
-  color: #000;
  }
 
- .wizard .header .title {
-  flex-grow: 1;
- }
-
- .wizard .header .close img {
-  width: 20px;
-  height: 20px;
+ .description {
+  font-size: 20px;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+  padding-bottom: 10px;
  }
 
  .progress-bar {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  padding-bottom: 10px;
  }
 
  .progress-bar .step {
@@ -79,13 +89,15 @@
  }
 
  .progress-bar .step .circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 30px;
   height: 30px;
+  border: 1px solid #888;
   border-radius: 50%;
   background-color: #ccc;
   text-align: center;
-  line-height: 30px;
-  position: relative;
  }
 
  .progress-bar .step .circle.active {
@@ -100,33 +112,40 @@
   background-color: #ccc;
  }
 
- .wizard .body {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 10px;
-  overflow-y: auto;
-  background-color: #fff;
-  color: #000;
- }
-
  .navigation {
   display: flex;
   gap: 10px;
+  width: 100%;
  }
 
  .navigation .gap {
   flex-grow: 1;
  }
+
+ .finish {
+  padding: 10px;
+  border: 1px solid #080;
+  border-radius: 10px;
+  background-color: #efe;
+ }
 </style>
 
-{#if show && steps.length >= 1}
+{#if steps.length > 0}
  <div class="wizard">
-  <div class="header">
-   <div class="title">{steps[currentStep].title}</div>
-   <div class="close" role="button" tabindex="0" on:click={clickClose} on:keydown={keyClose}><img src="img/close-black.svg" alt="X" /></div>
-  </div>
-  <div class="body">
+  {#if logo || product}
+   <div class="logo" role="button" tabindex="0" on:click={clickHomepage} on:keydown={keyHomepage}>
+    {#if logo}
+     <div><img src="img/logo.svg" alt={product} /></div>
+    {/if}
+    {#if product}
+     <div class="title">{product}</div>
+    {/if}
+   </div>
+  {/if}
+  {#if description}
+   <div class="description">{description}</div>
+  {/if}
+  {#if !finish}
    <div class="progress-bar">
     {#each steps as step, index}
      <div class="step">
@@ -140,7 +159,7 @@
     {/each}
    </div>
    <div class="content">
-    <svelte:component this={steps[currentStep].component} />
+    <svelte:component this={steps[currentStep]} />
    </div>
    <div class="navigation">
     {#if currentStep > 0}
@@ -150,9 +169,11 @@
     {#if currentStep < steps.length - 1}
      <Button on:click={nextStep} text="Next" />
     {:else}
-     <Button on:click={finish} text="Finish" />
+     <Button on:click={finished} text="Finish" />
     {/if}
    </div>
-  </div>
+  {:else}
+   <div class="finish">Registration completed successfully.</div>
+  {/if}
  </div>
 {/if}
