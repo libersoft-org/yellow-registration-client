@@ -7,6 +7,7 @@
  import ModalTerms from '../components/modal-terms.svelte';
  import Input from '../components/input.svelte';
  import Select from '../components/select.svelte';
+ import Option from '../components/select-option.svelte';
  import Checkbox from '../components/checkbox.svelte';
  let countries = [];
  let terms = false;
@@ -30,9 +31,9 @@
 <Form>
  <Field label="Phone number">
   <Select>
-   <option value="">- Country code -</option>
+   <Option value="" text="- Country code -" />
    {#each countries as c, index}
-    <option value={index}>{c.flag} ({c.code}) {c.dial_code}</option>
+    <Option value={index} text="{c.flag} ({c.code}) {c.dial_code}" />
    {/each}
   </Select>
   <Input type="text" placeholder="Phone number" />

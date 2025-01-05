@@ -1,5 +1,7 @@
 <script>
  import '../app.css';
+ import Select from '../components/select.svelte';
+ import Option from '../components/select-option.svelte';
  import Wizard from '../components/wizard.svelte';
  import WizardStep1 from '../wizard/step1.svelte';
  import WizardStep2 from '../wizard/step2.svelte';
@@ -8,6 +10,10 @@
  const product = 'Yellow';
  const link = 'https://yellow.libersoft.org';
  const wizardSteps = [WizardStep1, WizardStep2, WizardStep3, WizardStep4];
+
+ function setLang(value) {
+  console.log(value);
+ }
 </script>
 
 <style>
@@ -26,7 +32,12 @@
 <svelte:head>
  <title>{product} - account registration</title>
 </svelte:head>
-
 <div class="app">
+ <div class="language">
+  <Select onSelect={() => setLang(value)}>
+   <Option value="en" text="English" />
+   <Option value="cz" text="Česky (Czech)" />
+  </Select>
+ </div>
  <Wizard steps={wizardSteps} logo="img/logo.svg" {product} {link} description="Account registration" />
 </div>

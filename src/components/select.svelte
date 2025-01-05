@@ -1,5 +1,6 @@
 <script>
  export let value = '';
+ export let onSelect;
 </script>
 
 <style>
@@ -11,13 +12,13 @@
   outline: 0;
   font-family: inherit;
   font-size: inherit;
-  border-radius: 5px;
-  background-color: #eee;
-  cursor: pointer;
+  border: 1px solid #888;
+  border-radius: 10px;
   text-align: center;
+  cursor: pointer;
  }
 </style>
 
-<select {value}>
+<select {value} on:select={() => onSelect({ value })}>
  <slot></slot>
 </select>
