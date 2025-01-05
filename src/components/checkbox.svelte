@@ -1,6 +1,5 @@
 <script>
  export let checked = false;
- export let text = '';
 </script>
 
 <style>
